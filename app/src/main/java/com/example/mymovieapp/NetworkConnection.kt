@@ -1,5 +1,6 @@
 package com.example.mymovieapp
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,13 +9,14 @@ import android.content.IntentFilter
 import android.net.*
 import android.os.Build
 import androidx.lifecycle.LiveData
-
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class NetworkConnection(val context: Context) : LiveData<Boolean>() {
     var connectionManger: ConnectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     lateinit var netwrokCallback: ConnectivityManager.NetworkCallback
 
+    @SuppressLint("ObsoleteSdkInt")
     override fun onActive() {
         super.onActive()
         updateConnection()
@@ -34,16 +36,9 @@ class NetworkConnection(val context: Context) : LiveData<Boolean>() {
         }
     }
 
-/*override fun onInactive() {
-    super.onInactive()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        connectionManger.unregisterNetworkCallback(NetworkConnectioncallback())
-    } else {
-        context.unregisterReceiver(networkReciever())
-    }
-}*/
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
+
     fun lollipopNetworkRequest() {
         val requestBuilder = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -55,6 +50,7 @@ class NetworkConnection(val context: Context) : LiveData<Boolean>() {
         )
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     fun NetworkConnectioncallback(): ConnectivityManager.NetworkCallback {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             netwrokCallback = object : ConnectivityManager.NetworkCallback() {

@@ -8,11 +8,10 @@ import com.example.mymovieapp.ui.homefragment.HomeFragmentViewModel
 
 class DetailsViewModelFactory(
     private  val repository: Repository,
-    private val application: Application
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DetailsFragmentViewModel::class.java)) {
-            return DetailsFragmentViewModel(repository, application) as T
+            return DetailsFragmentViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown View Model Class")
     }

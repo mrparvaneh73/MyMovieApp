@@ -1,14 +1,13 @@
 package com.example.mymovieapp.ui.homefragment
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,66 +23,77 @@ import com.example.mymovieapp.data.Repository
 import com.example.mymovieapp.data.local.LocalDataSource
 import com.example.mymovieapp.data.local.database.AppDataBase
 import com.example.mymovieapp.data.remote.RemoteDataSource
-import com.example.mymovieapp.data.remote.network.Service
+import com.example.mymovieapp.data.remote.network.NetworkManager
 import com.example.mymovieapp.databinding.FragmentHomeBinding
-import com.example.mymovieapp.models.Result
+import com.example.mymovieapp.di.App
+import com.example.mymovieapp.ui.detailsfragment.DetailsFragmentViewModel
+import com.example.mymovieapp.ui.detailsfragment.DetailsViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var mLayoutManagerHorizontal: RecyclerView.LayoutManager
-    private lateinit var viewmodel: HomeFragmentViewModel
-    val adapter = MovieAdapter(
-        showDetails = { movie ->
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
-                    movie.id
-                )
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView2: RecyclerView
+
+    private val viewmodel by viewModels<HomeFragmentViewModel>(factoryProducer = {
+        HomeViewModelFactory((requireActivity().application as App).serviceLocator.repository)
+    })
+
+    val adapter = MovieAdapter(showDetails = { movie ->
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                movie.id
             )
-        }
-    )
-    val adapter2 = ComingSoonAdapter(
-        showDetails = { movie ->
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
-                    movie.id
-                )
+        )
+    })
+    val adapter2 = ComingSoonAdapter(showDetails = { movie ->
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                movie.id
             )
-        }
-    )
+        )
+    })
     private lateinit var binding: FragmentHomeBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "sssssss: " + "helloooo")
+
         binding = FragmentHomeBinding.bind(view)
-        viewmodelprovider()
-        val recyclerView = binding.recyclerView
-        val recyclerView2 = binding.comingsoonrecyclerView
-        mLayoutManagerHorizontal =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        recyclerView = binding.recyclerView
+
+        recyclerView2 = binding.comingsoonrecyclerView
+
+        mLayoutManagerHorizontal = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
         recyclerView2.layoutManager = mLayoutManagerHorizontal
+
         val networkConnection = NetworkConnection(requireContext())
 
         networkConnection.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected) {
                 lifecycleScope.launch {
-                    withContext(Dispatchers.Default){
+                    withContext(Dispatchers.Default) {
                         viewmodel.insertMovies()
                         viewmodel.insertComingSoon()
                     }
                 }
+                search()
 
             } else {
                 Toast.makeText(requireContext(), "No Internet", Toast.LENGTH_SHORT).show()
-                // Show No internet connection message
+
             }
         }
+
         viewmodel.getComingSoonFromLocal()
+
         viewmodel.getFromLocal()
+
         lifecycleScope.launch {
             launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewmodel.listMovies.collect {
                         adapter.submitList(it)
                         recyclerView.adapter = adapter
@@ -91,49 +101,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                    viewmodel.listComingSoon.collect{
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewmodel.listComingSoon.collect {
                         adapter2.submitList(it)
-                        recyclerView2.adapter=adapter2
+                        recyclerView2.adapter = adapter2
                     }
                 }
             }
-
-
         }
 
+    }
 
-
-//        viewmodel.getComingSoonMovies()
-//        viewmodel.getAllMovies()
-//        viewmodel.comingsoonList.observe(viewLifecycleOwner) {
-//            adapter2.submitList(it)
-//            recyclerView2.adapter = adapter2
-//        }
-//        viewmodel.movieList.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "onViewCreated: " + "https://image.tmdb.org/t/p/w500${it[0].poster_path}")
-//            adapter.submitList(it)
-//            recyclerView.adapter = adapter
-//
-
-//            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                @SuppressLint("NotifyDataSetChanged")
-//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                    if (!recyclerView.canScrollVertically(1)) {
-//                        viewmodel.getNextAllMovies()
-//                        viewmodel.nextmovieList.observe(viewLifecycleOwner) {
-//                            adapter.submitList(it)
-//                            recyclerView.adapter = adapter
-//
-//                        }
-//
-//                    }
-//                }
-//            })
-
-//        }
-
-
+    fun search() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewmodel.searchMovie(query!!)
@@ -150,21 +129,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         })
 
-
     }
 
 
-    fun viewmodelprovider() {
-        val application = requireNotNull(this.activity).application
-        val test = Service.getRetrofitClient(requireContext())
-        val test2 = test
-        val remoteDataSource = RemoteDataSource(Service, requireContext())
-        val localDataSource = LocalDataSource(AppDataBase.getDatabase(application).movieDao())
-        val repository = Repository(remoteDataSource, localDataSource)
-
-        val factory = HomeViewModelFactory(repository, application)
-
-        viewmodel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
-    }
 }
 

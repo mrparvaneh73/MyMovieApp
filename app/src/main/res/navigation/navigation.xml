@@ -19,6 +19,10 @@
         <argument
             android:name="movieid"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/playerFragment"

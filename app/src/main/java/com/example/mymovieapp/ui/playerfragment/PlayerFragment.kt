@@ -29,7 +29,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player), Player.Listener {
     private lateinit var player: ExoPlayer
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var viewModel: PlayerViewModel
+
     private lateinit var binding: FragmentPlayerBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,38 +90,4 @@ class PlayerFragment : Fragment(R.layout.fragment_player), Player.Listener {
     }
 
 
-//        object : YouTubeExtractor(requireContext()){
-//            override fun onExtractionComplete(
-//                ytFiles: SparseArray<YtFile>?,
-//                videoMeta: VideoMeta?
-//            ) {
-//                if (ytFiles != null){
-//                    val itag=137
-//                    val audioTag=140
-//                    val videoUrI=ytFiles[itag].url
-//                    val audiUrI=ytFiles[audioTag].url
-//
-//                    val audioSource=ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(audiUrI))
-//                    val videoSource=ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(videoUrI))
-//
-//                    player!!.setMediaSource(MergingMediaSource(
-//                        true,videoSource,audioSource
-//                    ),true)
-//                    player!!.prepare()
-//                    player!!.playWhenReady=playwhenready
-//                    player!!.seekTo(currentwindow,playbackposition)
-//
-//                }
-//            }
-//
-//        }.extract(playYoutubeVideo,false,true)
-
-
-    fun viewmodelprovider() {
-        val application = requireNotNull(this.activity).application
-
-
-        val factory = PlayerViewModelFactory(application)
-        viewModel = ViewModelProvider(this, factory).get(PlayerViewModel::class.java)
-    }
 }
