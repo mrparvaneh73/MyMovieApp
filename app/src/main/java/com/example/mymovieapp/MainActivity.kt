@@ -10,8 +10,9 @@ import com.ScrollHandler
 import com.example.mymovieapp.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.mymovieapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val navController by lazy { findNavController(R.id.myNavHostFragment) }
 

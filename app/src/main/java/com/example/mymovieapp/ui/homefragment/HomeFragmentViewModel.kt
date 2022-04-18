@@ -8,12 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.mymovieapp.data.Repository
 import com.example.mymovieapp.models.Result
 import com.example.mymovieapp.models.ResultX
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-class HomeFragmentViewModel(private val repository: Repository) : ViewModel() {
+import javax.inject.Inject
+@HiltViewModel
+class HomeFragmentViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     val searchMovie = MutableLiveData<List<Result>>()
     var job: Job? = null

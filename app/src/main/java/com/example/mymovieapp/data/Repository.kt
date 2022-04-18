@@ -5,8 +5,9 @@ import com.example.mymovieapp.data.remote.RemoteDataSource
 import com.example.mymovieapp.models.Result
 import com.example.mymovieapp.models.ResultX
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class Repository(
+class Repository  constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) {

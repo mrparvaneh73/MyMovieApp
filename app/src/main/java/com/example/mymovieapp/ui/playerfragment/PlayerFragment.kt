@@ -21,8 +21,9 @@ import com.example.mymovieapp.databinding.FragmentPlayerBinding
 import com.google.android.exoplayer2.*
 
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class PlayerFragment : Fragment(R.layout.fragment_player), Player.Listener {
 
     private lateinit var playerView: StyledPlayerView

@@ -1,15 +1,12 @@
 package com.example.mymovieapp.ui.homefragment
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -19,27 +16,18 @@ import com.example.mymovieapp.ComingSoonAdapter
 import com.example.mymovieapp.MovieAdapter
 import com.example.mymovieapp.NetworkConnection
 import com.example.mymovieapp.R
-import com.example.mymovieapp.data.Repository
-import com.example.mymovieapp.data.local.LocalDataSource
-import com.example.mymovieapp.data.local.database.AppDataBase
-import com.example.mymovieapp.data.remote.RemoteDataSource
-import com.example.mymovieapp.data.remote.network.NetworkManager
 import com.example.mymovieapp.databinding.FragmentHomeBinding
-import com.example.mymovieapp.di.App
-import com.example.mymovieapp.ui.detailsfragment.DetailsFragmentViewModel
-import com.example.mymovieapp.ui.detailsfragment.DetailsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var mLayoutManagerHorizontal: RecyclerView.LayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerView2: RecyclerView
 
-    private val viewmodel by viewModels<HomeFragmentViewModel>(factoryProducer = {
-        HomeViewModelFactory((requireActivity().application as App).serviceLocator.repository)
-    })
+     val viewmodel by viewModels<HomeFragmentViewModel>()
 
     val adapter = MovieAdapter(showDetails = { movie ->
         findNavController().navigate(

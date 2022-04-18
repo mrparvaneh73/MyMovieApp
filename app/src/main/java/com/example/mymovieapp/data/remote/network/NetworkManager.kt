@@ -1,23 +1,14 @@
 package com.example.mymovieapp.data.remote.network
 
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.net.ConnectivityManager
-import android.util.Log
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-import java.io.IOException
-
 
 //object NetworkManager {
 //    private var retrofit: Retrofit? = null
-//    fun getRetrofitClient(mContext: Context?): MovieApi? {
+//    fun getRetrofitClient(mContext: Context?): MovieService? {
 //        if (retrofit == null) {
 //            val oktHttpClient = OkHttpClient.Builder()
 //                .addInterceptor(NetworkConnectionInterceptor(mContext!!))
@@ -29,9 +20,9 @@ import java.io.IOException
 //                .client(oktHttpClient.build())
 //                .build()
 //        }
-//        return retrofit!!.create(MovieApi::class.java)
+//        return retrofit!!.create(MovieService::class.java)
 //    }
-////    val service = retrofit!!.create(MovieApi::class.java)
+////    val service = retrofit!!.create(MovieService::class.java)
 //}
 object NetworkManager {
 
@@ -46,7 +37,7 @@ object NetworkManager {
         .client(client)
         .build()
 
-    val service = retrofit.create(MovieApi::class.java)
+    val service = retrofit.create(MovieService::class.java)
 }
 
 

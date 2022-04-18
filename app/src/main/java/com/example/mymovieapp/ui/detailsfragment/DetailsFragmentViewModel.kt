@@ -8,9 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.mymovieapp.data.Repository
 import com.example.mymovieapp.models.MovieDetails
 import com.example.mymovieapp.models.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailsFragmentViewModel(private val repository: Repository):
+
+
+@HiltViewModel
+class DetailsFragmentViewModel @Inject constructor(private val repository: Repository):
     ViewModel() {
     val movieList = MutableLiveData<MovieDetails>()
     fun getMovie(movie_id:Int){

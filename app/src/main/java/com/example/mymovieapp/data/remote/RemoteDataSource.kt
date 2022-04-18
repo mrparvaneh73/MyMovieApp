@@ -1,9 +1,9 @@
 package com.example.mymovieapp.data.remote
 
-import com.example.mymovieapp.data.remote.network.MovieApi
-import com.example.mymovieapp.data.remote.network.NetworkManager
+import com.example.mymovieapp.data.remote.network.MovieService
+import javax.inject.Inject
 
-class RemoteDataSource(private val service:MovieApi) {
+class RemoteDataSource @Inject constructor(private val service:MovieService) {
     suspend fun searchMovie(query:String)=service.searchMovie(query)
 
     suspend fun getAllMovies(page:Int)=service.getAllMovies(page)

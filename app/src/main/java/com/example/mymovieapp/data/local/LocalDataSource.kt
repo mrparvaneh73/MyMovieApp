@@ -4,8 +4,9 @@ import com.example.mymovieapp.data.local.database.MovieDao
 import com.example.mymovieapp.models.Result
 import com.example.mymovieapp.models.ResultX
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocalDataSource(private val movieDao: MovieDao) {
+class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
 
     suspend fun insertMovie(movies:List<Result>){
         movieDao.insertMovieList(*movies.toTypedArray())
