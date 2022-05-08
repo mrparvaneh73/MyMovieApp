@@ -1,6 +1,6 @@
 package com.example.mymovieapp.di
 
-import com.example.mymovieapp.data.Repository
+import com.example.mymovieapp.data.repositories.Repository
 import com.example.mymovieapp.data.local.LocalDataSource
 import com.example.mymovieapp.data.remote.RemoteDataSource
 import dagger.Module

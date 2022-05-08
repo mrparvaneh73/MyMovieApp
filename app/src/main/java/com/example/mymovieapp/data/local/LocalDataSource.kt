@@ -14,11 +14,11 @@ class LocalDataSource @Inject constructor(private val movieDao: MovieDao) {
     suspend fun insertComingSoon(movies:List<ResultX>){
         movieDao.insertComingSoonList(*movies.toTypedArray())
     }
-    fun getAllComingSoon():Flow<List<ResultX>>{
+ suspend   fun getAllComingSoon():List<ResultX>{
         return  movieDao.getAllComingSoon()
     }
 
-    fun getAllMovies():Flow<List<Result>>{
+   suspend fun getAllMovies():List<Result>{
        return  movieDao.getAllMovies()
     }
 }

@@ -1,29 +1,29 @@
 package com.example.mymovieapp.ui.detailsfragment
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mymovieapp.data.Repository
+import com.example.mymovieapp.data.repositories.Repository
 import com.example.mymovieapp.models.MovieDetails
-import com.example.mymovieapp.models.Result
+import com.example.mymovieapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @HiltViewModel
-class DetailsFragmentViewModel @Inject constructor(private val repository: Repository):
+class DetailsFragmentViewModel @Inject constructor(private val repository: Repository) :
     ViewModel() {
-    val movieList = MutableLiveData<MovieDetails>()
-    fun getMovie(movie_id:Int){
+
+    private val _listMovies = MutableSharedFlow<Resource<MovieDetails>>()
+    val listMovies: SharedFlow<Resource<MovieDetails>> = _listMovies
+
+    fun getMovie(movie_id: Int) {
         viewModelScope.launch {
-          val response=  repository.getMovie(movie_id)
-            if (response.isSuccessful){
-                movieList.postValue(response.body())
+            repository.getMovie(movie_id).collectLatest {
+                _listMovies.emit(it)
             }
+
         }
     }
 }

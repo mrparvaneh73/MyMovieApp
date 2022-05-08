@@ -7,6 +7,6 @@ class RemoteDataSource @Inject constructor(private val service:MovieService) {
     suspend fun searchMovie(query:String)=service.searchMovie(query)
 
     suspend fun getAllMovies(page:Int)=service.getAllMovies(page)
-    suspend fun getComingSoonMovies(page:Int)=service.getComingSoonMovies(page)
+    suspend fun getComingSoonMovies(page:Int)=service.getComingSoonMovies(page=page)
     suspend fun getMovie(movie_id:Int)=service.getMovie(movie_id)
 }

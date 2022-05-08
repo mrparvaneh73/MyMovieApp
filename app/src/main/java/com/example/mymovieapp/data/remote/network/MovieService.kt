@@ -24,8 +24,9 @@ interface MovieService {
 
     @GET("3/movie/upcoming")
     suspend fun getComingSoonMovies(
-        @Query("page") page:Int,
-        @Query("api_key") api_key:String=Constants.API_KEY
+        @Query("api_key") api_key:String=Constants.API_KEY,
+        @Query("language") language:String="en-US",
+        @Query("page") page:Int
     ) : Response<Comingsoon>
 
     @GET("3/movie/{movie_id}?")

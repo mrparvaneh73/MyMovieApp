@@ -1,4 +1,4 @@
-package com.example.mymovieapp
+package com.example.mymovieapp.utils
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
